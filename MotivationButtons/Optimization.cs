@@ -17,6 +17,11 @@ namespace MotivationButtons
         public string excelPath;
         public int totalCandidate;
 
+        public void CandidateDataInit()
+        {
+
+        }
+
         public void LoadCandidateData(string path)
         {
             int rows = 7;
@@ -64,25 +69,42 @@ namespace MotivationButtons
 
         public void FindMaxMinMB()
         {
-            int i = 0;
             int number;
-
-            //create mb score array
-            for (int rows = 7; rows < totalCandidate; rows++)
+            for (int i = 0; i < totalCandidate; i++)
             {
-                for (int columns = 96; columns < 110; columns++)
+                for (int columns = 96 - 4; columns < 110 - 3; columns++)
                 {
-                    if (Int32.TryParse(candidateArr[rows][columns], out number))
+                    if (Int32.TryParse(candidateArr[i][columns], out number))
                     {
                         mbArr.Add(new List<int>());
                         mbArr[i].Add(number);
+
+                        MessageBox.Show(number.ToString());
                     }
                 }
             }
 
+            int smallInt = 0;
+            int smallIntIndex = 0;
 
-            int min = mbArr[0].Min();
-            int max = mbArr[0].Max();
+            //for (int i = 0; rows < totalCandidate; rows++)
+            //{
+            //    for(int j = 0; j < 14; j++)
+            //    {
+            //        if(mbArr[i][j] < smallInt)
+            //        {
+            //            smallInt = mbArr[i][j];
+            //            smallIntIndex = j;
+            //        }
+            //    }
+
+
+            //    MessageBox.Show(smallInt.ToString());
+            //    MessageBox.Show(smallIntIndex.ToString());
+            //}
+
+            //int min = mbArr[0].Min();
+            //int max = mbArr[0].Max();
         }
 
 

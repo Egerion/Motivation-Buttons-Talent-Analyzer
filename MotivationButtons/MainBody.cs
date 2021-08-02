@@ -29,6 +29,14 @@ namespace MotivationButtons
             }
         }
 
+        public void LoadCandidateMBs()
+        {
+            for(int i = 1; i < 15; i++)
+            {
+                
+            }
+        }
+
         private void Button_LoadExcel_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -41,6 +49,7 @@ namespace MotivationButtons
                 optimizationObj.LoadCandidateData(openFileDialog.FileName);
                 optimizationObj.RemoveImproperCandidateData();
                 LoadCandidateNames();
+                optimizationObj.FindMaxMinMB();
             }
         }
     }
