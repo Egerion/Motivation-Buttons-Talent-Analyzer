@@ -9,11 +9,16 @@ namespace MotivationButtons
 {
     public class Optimization
     {
-        const int minScore = 180;
+        //constants
+        public const int minScore = 180;
+        public const string removedCandidate = "Candidate Removed";
 
         //global variables
-        public List<List<string>> candidateArr = new List<List<string>>();
-        public List<List<int>> mbArr = new List<List<int>>();
+        public List<List<string>> candidateArr
+            = new List<List<string>>();
+        public List<List<int>> mbScoreArr, mbMaxScoreArr, mbMinScoreArr
+            = new List<List<int>>();
+
         public string excelPath;
         public int totalCandidate;
 
@@ -62,51 +67,34 @@ namespace MotivationButtons
                 }
                 if (scoreCounter < minScore)
                 {
-                    candidateArr[i][0] = "Removed Candidate";
+                    candidateArr[i][0] = removedCandidate;
                 }
             }
         }
 
         public void FindMaxMinMB()
         {
-            int number;
+            int tempNumber; 
+
+
             for (int i = 0; i < totalCandidate; i++)
             {
                 for (int columns = 96 - 4; columns < 110 - 3; columns++)
                 {
-                    if (Int32.TryParse(candidateArr[i][columns], out number))
+                    if (Int32.TryParse(candidateArr[i][columns], out tempNumber))
                     {
-                        mbArr.Add(new List<int>());
-                        mbArr[i].Add(number);
+                        mbScoreArr.Add(new List<int>());
+                        mbScoreArr[i].Add(tempNumber);
 
-                        MessageBox.Show(number.ToString());
+                        MessageBox.Show(tempNumber.ToString());
                     }
                 }
             }
-
-            int smallInt = 0;
-            int smallIntIndex = 0;
-
-            //for (int i = 0; rows < totalCandidate; rows++)
-            //{
-            //    for(int j = 0; j < 14; j++)
-            //    {
-            //        if(mbArr[i][j] < smallInt)
-            //        {
-            //            smallInt = mbArr[i][j];
-            //            smallIntIndex = j;
-            //        }
-            //    }
-
-
-            //    MessageBox.Show(smallInt.ToString());
-            //    MessageBox.Show(smallIntIndex.ToString());
-            //}
-
-            //int min = mbArr[0].Min();
-            //int max = mbArr[0].Max();
+            for(int i = 0; i < totalCandidate; i++)
+            {
+                mbMinScoreArr[i].Add(mbScoreArr[i].Min());
+                mbMaxScoreArr[i].Add(mbScoreArr[i].Max());
+            }
         }
-
-
     }
 }
