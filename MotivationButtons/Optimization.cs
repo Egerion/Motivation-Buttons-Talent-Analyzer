@@ -9,15 +9,54 @@ namespace MotivationButtons
 {
     public class Optimization
     {
+        [Flags]
+        public enum MotivationButtonInfo
+        {
+            Routine,
+            ObjectiveOrianted,
+            BeingResponsible,
+            BeingOpportuniscit,
+            BeingFamilyGuy,
+            SocialContact,
+            BeingAppreciated,
+            BeingSafe,
+            BeingActive,
+            BeingFair,
+            BeingAnalytical,
+            BeingSincere,
+            BeingTeamMate,
+            BeingConvincing,
+            BeingStressed
+        }
+
         //constants
         public const int minScore = 180;
         public const string removedCandidate = "Candidate Removed";
 
         //global variables
-        public List<List<string>> candidateArr
-            = new List<List<string>>();
-        public List<List<int>> mbScoreArr, mbMaxScoreArr, mbMinScoreArr
-            = new List<List<int>>();
+        public List<List<string>>candidateArr 
+                                = new List<List<string>>();
+
+        public List<List<int>>  mbScoreArr
+                                = new List<List<int>>();
+        
+        public List<List<int>>  mbRoutineArr,
+                                mbObjectiveOriantedArr,
+                                mbBeingResponsibleArr,
+                                mbBeingOpportuniscitArr,
+                                mbBeingFamilyGuyArr,
+                                mbSocialContactArr,
+                                mbBeingAppreciatedArr,
+                                mbBeingSafeArr,
+                                mbBeingActiveArr,
+                                mbBeingFairArr,
+                                mbBeingAnalyticalArr,
+                                mbBeingSincereArr,
+                                mbBeingTeamMateArr,
+                                mbBeingConvincingArr,
+                                mbBeingStressedArr
+
+                                = new List<List<int>>();
 
         public string excelPath;
         public int totalCandidate;
@@ -76,7 +115,7 @@ namespace MotivationButtons
         {
             int tempNumber; 
 
-
+            //gather motivation buttons scores
             for (int i = 0; i < totalCandidate; i++)
             {
                 for (int columns = 96 - 4; columns < 110 - 3; columns++)
@@ -90,11 +129,81 @@ namespace MotivationButtons
                     }
                 }
             }
+
             for(int i = 0; i < totalCandidate; i++)
             {
-                mbMinScoreArr[i].Add(mbScoreArr[i].Min());
-                mbMaxScoreArr[i].Add(mbScoreArr[i].Max());
+                for(int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.BeingStressed; mbIterator++)
+                {
+                    switch (mbIterator)
+                    {
+                        case (int)MotivationButtonInfo.Routine:
+                            mbRoutineArr.Add(new List<int>());
+                            mbRoutineArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.ObjectiveOrianted:
+                            mbObjectiveOriantedArr.Add(new List<int>());
+                            mbObjectiveOriantedArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingResponsible:
+                            mbBeingResponsibleArr.Add(new List<int>());
+                            mbBeingResponsibleArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingOpportuniscit:
+                            mbBeingOpportuniscitArr.Add(new List<int>());
+                            mbBeingOpportuniscitArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingFamilyGuy:
+                            mbBeingFamilyGuyArr.Add(new List<int>());
+                            mbBeingFamilyGuyArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.SocialContact:
+                            mbSocialContactArr.Add(new List<int>());
+                            mbSocialContactArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingAppreciated:
+                            mbBeingAppreciatedArr.Add(new List<int>());
+                            mbBeingAppreciatedArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingSafe:
+                            mbBeingSafeArr.Add(new List<int>());
+                            mbBeingSafeArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingActive:
+                            mbBeingActiveArr.Add(new List<int>());
+                            mbBeingActiveArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingFair:
+                            mbBeingFairArr.Add(new List<int>());
+                            mbBeingFairArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingAnalytical:
+                            mbBeingAnalyticalArr.Add(new List<int>());
+                            mbBeingAnalyticalArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingSincere:
+                            mbBeingSincereArr.Add(new List<int>());
+                            mbBeingSincereArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingTeamMate:
+                            mbBeingTeamMateArr.Add(new List<int>());
+                            mbBeingTeamMateArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingConvincing:
+                            mbBeingConvincingArr.Add(new List<int>());
+                            mbBeingConvincingArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        case (int)MotivationButtonInfo.BeingStressed:
+                            mbBeingStressedArr.Add(new List<int>());
+                            mbBeingStressedArr[i].Add(mbScoreArr[i][mbIterator]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
+
+            //mbMinScoreArr[i].Add(mbScoreArr[i].Min());
+            //mbMaxScoreArr[i].Add(mbScoreArr[i].Max());
         }
     }
 }
