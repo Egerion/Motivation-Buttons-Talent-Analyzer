@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MotivationButtons
@@ -26,50 +23,47 @@ namespace MotivationButtons
             BeingSincere,
             BeingTeamMate,
             BeingConvincing,
-            BeingStressed
+            BeingStressed = 14
         }
 
-        //constants
-        public const int minScore = 180;
-        public const string removedCandidate = "Candidate Removed";
+        [Flags]
+        public enum WorkingStatus
+        {
+            HighPerformance, 
+            Working,
+            Candidate, 
+            NotWorking
+        }
+
+        //constant paramters, which subject to change in the future...
+        public const int                mbScoreStartIndex           = 96  - 4;
+        public const int                mbScoreStopIndex            = 110 - 3;
+        public const int                totalMBScore                = 180;
+        public const int                startColumn                 = 4;
+        public const int                startRow                    = 7;
+        public const int                minScoreIndex               = 0;
+        public const int                maxScoreIndex               = 1;
+        public  int                     workingStatusColumn         = 126;
+        public const int                finalMBQuestionRowIndex     = 92;
 
         //global variables
-        public List<List<string>>candidateArr 
-                                = new List<List<string>>();
+        public List<List<string>>       masterDataArr               = new List<List<string>>();     /* i = candidates, j = all excel rows* (starting from names...)*/
+        public List<List<string>>       candidateArr                = new List<List<string>>();     /* ONLY ELIGIBLE CANDIDATES i = candidates, j = all excel rows* (starting from names...)*/ 
+        public List<List<double>>       mbScoreArr                  = new List<List<double>>();     /* i = candidates, j = motivation buttons scores*/
+        public List<List<double>>       normalizedMBScoreArr        = new List<List<double>>();     /* i = candidates, j = normalized motivation buttons scores*/ 
+        public List<List<int>>          mbMinMaxScoreArr            = new List<List<int>>();        /* i = motivation buttons, j = 0: min score, j = 1: max score*/
+        public List<List<double>>       diffNormalizedMBScoreArr    = new List<List<double>>();     /* i = candidates, j = diffed - normalized motivation buttons scores*/
 
-        public List<List<int>>  mbScoreArr
-                                = new List<List<int>>();
-        
-        public List<List<int>>  mbRoutineArr,
-                                mbObjectiveOriantedArr,
-                                mbBeingResponsibleArr,
-                                mbBeingOpportuniscitArr,
-                                mbBeingFamilyGuyArr,
-                                mbSocialContactArr,
-                                mbBeingAppreciatedArr,
-                                mbBeingSafeArr,
-                                mbBeingActiveArr,
-                                mbBeingFairArr,
-                                mbBeingAnalyticalArr,
-                                mbBeingSincereArr,
-                                mbBeingTeamMateArr,
-                                mbBeingConvincingArr,
-                                mbBeingStressedArr
+        public string                   excelPath;
+        public int                      totalCandidate;
+        public string[]                 mbNames                     = Enum.GetNames(typeof(MotivationButtonInfo));
+        public string[]                 candidateWorkStatus         = Enum.GetNames(typeof(WorkingStatus));
 
-                                = new List<List<int>>();
-
-        public string excelPath;
-        public int totalCandidate;
-
-        public void CandidateDataInit()
-        {
-
-        }
-
+        //functions
         public void LoadCandidateData(string path)
         {
-            int rows = 7;
-            int columns = 4;
+            int rows = startRow;
+            int columns = startColumn;
             int candidateIterator = 0;
 
             this.excelPath = path;
@@ -77,13 +71,13 @@ namespace MotivationButtons
 
             while (excel.ReadCell(rows, columns) != null)
             {
-                candidateArr.Add(new List<string>());
+                masterDataArr.Add(new List<string>());
                 while (excel.ReadCell(rows, columns) != null)
                 {
-                    candidateArr[candidateIterator].Add(excel.ReadCell(rows, columns));
+                    masterDataArr[candidateIterator].Add(excel.ReadCell(rows, columns));
                     columns++;
                 }
-                columns = 4;
+                columns = startColumn;
                 candidateIterator++;
                 rows++;
             }
@@ -94,116 +88,126 @@ namespace MotivationButtons
         public void RemoveImproperCandidateData()
         {
             int number;
-            for (int i = 0; i < totalCandidate; i++)
+            int tempScoreCounter = 0;
+            int newCandidateIterator = 0;
+
+            for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
             {
-                int scoreCounter = 0;
-                for (int j = 1; j < 92; j++)
+                for (int dataIterator = 0; dataIterator < finalMBQuestionRowIndex; dataIterator++)
                 {
-                    if (Int32.TryParse(candidateArr[i][j], out number))
+                    if (Int32.TryParse(masterDataArr[candidateIterator][dataIterator], out number))
                     {
-                        scoreCounter += number;
+                        tempScoreCounter += number;
                     }
                 }
-                if (scoreCounter < minScore)
+                if (tempScoreCounter == totalMBScore)
                 {
-                    candidateArr[i][0] = removedCandidate;
+                    candidateArr.Add(new List<string>());
+                    for (int dataIterator = 0; dataIterator <= workingStatusColumn; dataIterator++)
+                    {                 
+                        candidateArr[newCandidateIterator].Add(masterDataArr[candidateIterator][dataIterator]);
+                    }
+                    newCandidateIterator++;
+                }
+                else
+                {
+                    //debugging candidate removed...
+                    MessageBox.Show("Candidate: " + masterDataArr[candidateIterator][0] + " removed due to incomplete test result...");
+                }
+                tempScoreCounter = 0; //reset the counter
+            }
+            if(newCandidateIterator > 0)
+            {
+                totalCandidate = newCandidateIterator; //update the candidate size!
+            }
+        }
+
+        public void NormalizeMotivationButtons()
+        {
+            int tempNumber;
+
+            //gather motivation buttons scores
+            for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
+            {
+                mbScoreArr.Add(new List<double>());
+                for (int mbIterator = mbScoreStartIndex; mbIterator < mbScoreStopIndex; mbIterator++)
+                {
+                    if (Int32.TryParse(candidateArr[candidateIterator][mbIterator], out tempNumber))
+                    {                   
+                        mbScoreArr[candidateIterator].Add(tempNumber);
+                    }
+                }
+            }
+
+            //find and store min max for all motivation buttons...
+            for(int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.BeingStressed; mbIterator++)
+            {
+                int tempMin     = 100;
+                int tempMax     = 0;
+                int temValue    = 0;
+
+                mbMinMaxScoreArr.Add(new List<int>());
+                for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
+                {
+                    temValue = (int)mbScoreArr[candidateIterator][mbIterator];
+                    if(temValue <= tempMin)
+                    {
+                        tempMin = temValue;
+                    }
+                    if(temValue >= tempMax)
+                    {
+                        tempMax = temValue;
+                    }
+                }
+                mbMinMaxScoreArr[mbIterator].Add(tempMin);
+                mbMinMaxScoreArr[mbIterator].Add(tempMax);
+
+                //debugging the min max of motivation buttons...
+                //MessageBox.Show("Min MB: " + mbNames[mbIterator] + ": " + mbMinMaxScoreArr[mbIterator][minScoreIndex].ToString());
+                //MessageBox.Show("Max MB: " + mbNames[mbIterator] + ": " + mbMinMaxScoreArr[mbIterator][maxScoreIndex].ToString());
+            }
+
+            //normalize the motivation buttons for all candidates...
+            for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.BeingStressed; mbIterator++)
+            {
+                
+                for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
+                {
+                    normalizedMBScoreArr.Add(new List<double>());
+                    normalizedMBScoreArr[candidateIterator].Add(((mbScoreArr[candidateIterator][mbIterator] / mbMinMaxScoreArr[mbIterator][minScoreIndex]) / (mbMinMaxScoreArr[mbIterator][maxScoreIndex] - mbMinMaxScoreArr[mbIterator][minScoreIndex])));
+                    //debugging the normalized values for all candidates...
+                    //MessageBox.Show("candidate: " + candidateArr[candidateIterator][0] + " normalized: " + mbNames[mbIterator] + ": " + normalizedMBScoreArr[candidateIterator][mbIterator].ToString());
                 }
             }
         }
 
-        public void FindMaxMinMB()
+        public void ApplyCandidateCurrentWorkingStatus()
         {
-            int tempNumber; 
-
-            //gather motivation buttons scores
-            for (int i = 0; i < totalCandidate; i++)
+            for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.BeingStressed; mbIterator++)
             {
-                for (int columns = 96 - 4; columns < 110 - 3; columns++)
-                {
-                    if (Int32.TryParse(candidateArr[i][columns], out tempNumber))
-                    {
-                        mbScoreArr.Add(new List<int>());
-                        mbScoreArr[i].Add(tempNumber);
+                double tempWorkingScore = 0.0;
+                double tempNotWorkingScore = 0.0;
 
-                        MessageBox.Show(tempNumber.ToString());
+                for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
+                {
+                   if (    Int32.Parse(candidateArr[candidateIterator][workingStatusColumn]) == (int)WorkingStatus.HighPerformance 
+                        || Int32.Parse(candidateArr[candidateIterator][workingStatusColumn]) == (int)WorkingStatus.Working)
+                    {
+                        tempWorkingScore += normalizedMBScoreArr[candidateIterator][mbIterator];
+                        //debugging
+                        //MessageBox.Show("Candidate: " + candidateArr[candidateIterator][0] + " work status is: " + candidateWorkStatus[0]);
+                    }
+                    else if(Int32.Parse(candidateArr[candidateIterator][workingStatusColumn]) == (int)WorkingStatus.NotWorking)
+                    {
+                        tempNotWorkingScore += normalizedMBScoreArr[candidateIterator][mbIterator];
+                        //debugging
+                        //MessageBox.Show("Candidate: " + candidateArr[candidateIterator][0] + " work status is: " + candidateWorkStatus[1]);
                     }
                 }
+                diffNormalizedMBScoreArr.Add(new List<double>());
+                diffNormalizedMBScoreArr[mbIterator].Add(Math.Abs(tempWorkingScore - tempNotWorkingScore));
             }
 
-            for(int i = 0; i < totalCandidate; i++)
-            {
-                for(int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.BeingStressed; mbIterator++)
-                {
-                    switch (mbIterator)
-                    {
-                        case (int)MotivationButtonInfo.Routine:
-                            mbRoutineArr.Add(new List<int>());
-                            mbRoutineArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.ObjectiveOrianted:
-                            mbObjectiveOriantedArr.Add(new List<int>());
-                            mbObjectiveOriantedArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingResponsible:
-                            mbBeingResponsibleArr.Add(new List<int>());
-                            mbBeingResponsibleArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingOpportuniscit:
-                            mbBeingOpportuniscitArr.Add(new List<int>());
-                            mbBeingOpportuniscitArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingFamilyGuy:
-                            mbBeingFamilyGuyArr.Add(new List<int>());
-                            mbBeingFamilyGuyArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.SocialContact:
-                            mbSocialContactArr.Add(new List<int>());
-                            mbSocialContactArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingAppreciated:
-                            mbBeingAppreciatedArr.Add(new List<int>());
-                            mbBeingAppreciatedArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingSafe:
-                            mbBeingSafeArr.Add(new List<int>());
-                            mbBeingSafeArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingActive:
-                            mbBeingActiveArr.Add(new List<int>());
-                            mbBeingActiveArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingFair:
-                            mbBeingFairArr.Add(new List<int>());
-                            mbBeingFairArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingAnalytical:
-                            mbBeingAnalyticalArr.Add(new List<int>());
-                            mbBeingAnalyticalArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingSincere:
-                            mbBeingSincereArr.Add(new List<int>());
-                            mbBeingSincereArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingTeamMate:
-                            mbBeingTeamMateArr.Add(new List<int>());
-                            mbBeingTeamMateArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingConvincing:
-                            mbBeingConvincingArr.Add(new List<int>());
-                            mbBeingConvincingArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        case (int)MotivationButtonInfo.BeingStressed:
-                            mbBeingStressedArr.Add(new List<int>());
-                            mbBeingStressedArr[i].Add(mbScoreArr[i][mbIterator]);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-
-            //mbMinScoreArr[i].Add(mbScoreArr[i].Min());
-            //mbMaxScoreArr[i].Add(mbScoreArr[i].Max());
         }
     }
 }
