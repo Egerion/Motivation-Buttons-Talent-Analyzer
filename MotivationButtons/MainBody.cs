@@ -17,7 +17,6 @@ namespace MotivationButtons
         public MainBody()
         { 
             InitializeComponent();
-            //System.Threading.Tasks.Task.Run(() => optimizationObj.LoadCandidateData(openFileDialog.FileName));
         }
 
         public void LoadCandidateNames()
@@ -44,6 +43,9 @@ namespace MotivationButtons
                 LoadCandidateNames();
                 optimizationObj.NormalizeMotivationButtons();
                 optimizationObj.ApplyCandidateCurrentWorkingStatus();
+                optimizationObj.SelectTopCandidates();
+
+
             }
         }
     }

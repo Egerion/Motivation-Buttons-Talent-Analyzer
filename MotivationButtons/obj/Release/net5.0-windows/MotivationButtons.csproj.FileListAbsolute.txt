@@ -18,3 +18,4 @@ C:\Users\Ege\Documents\GitHub\MotivationButtons\MotivationButtons\obj\Release\ne
 C:\Users\Ege\Documents\GitHub\MotivationButtons\MotivationButtons\obj\Release\net5.0-windows\ref\MotivationButtons.dll
 C:\Users\Ege\Documents\GitHub\MotivationButtons\MotivationButtons\obj\Release\net5.0-windows\MotivationButtons.pdb
 C:\Users\Ege\Documents\GitHub\MotivationButtons\MotivationButtons\obj\Release\net5.0-windows\MotivationButtons.genruntimeconfig.cache
+C:\Users\Ege\Documents\GitHub\MotivationButtons\MotivationButtons\obj\Release\net5.0-windows\MotivationButtons.Excel.resources

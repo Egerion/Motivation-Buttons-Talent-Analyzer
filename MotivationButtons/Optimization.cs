@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace MotivationButtons
 {
-    public class Optimization
+    public partial class Optimization
     {
         [Flags]
         public enum MotivationButtonInfo
@@ -12,7 +13,7 @@ namespace MotivationButtons
             Routine,
             ObjectiveOrianted,
             BeingResponsible,
-            BeingOpportuniscit,
+            BeingOpportunistic,
             BeingFamilyGuy,
             SocialContact,
             BeingAppreciated,
@@ -29,10 +30,10 @@ namespace MotivationButtons
         [Flags]
         public enum WorkingStatus
         {
-            HighPerformance, 
-            Working,
-            Candidate, 
-            NotWorking
+            HighPerformance, //0
+            Working, //1
+            Candidate,  //2
+            NotWorking //3
         }
 
         //constant paramters, which subject to change in the future...
@@ -43,7 +44,7 @@ namespace MotivationButtons
         public const int                startRow                    = 7;
         public const int                minScoreIndex               = 0;
         public const int                maxScoreIndex               = 1;
-        public  int                     workingStatusColumn         = 126;
+        public       int                workingStatusColumn         = 126;
         public const int                finalMBQuestionRowIndex     = 92;
 
         //global variables
@@ -52,7 +53,7 @@ namespace MotivationButtons
         public List<List<double>>       mbScoreArr                  = new List<List<double>>();     /* i = candidates, j = motivation buttons scores*/
         public List<List<double>>       normalizedMBScoreArr        = new List<List<double>>();     /* i = candidates, j = normalized motivation buttons scores*/ 
         public List<List<int>>          mbMinMaxScoreArr            = new List<List<int>>();        /* i = motivation buttons, j = 0: min score, j = 1: max score*/
-        public List<List<double>>       diffNormalizedMBScoreArr    = new List<List<double>>();     /* i = candidates, j = diffed - normalized motivation buttons scores*/
+        public List<List<double>>       diffNormalizedMBScoreArr    = new List<List<double>>();     /* i = candidates, j = 0: motivation button types j = 1: scores*/
 
         public string                   excelPath;
         public int                      totalCandidate;
@@ -169,8 +170,7 @@ namespace MotivationButtons
 
             //normalize the motivation buttons for all candidates...
             for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.BeingStressed; mbIterator++)
-            {
-                
+            {               
                 for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
                 {
                     normalizedMBScoreArr.Add(new List<double>());
@@ -205,8 +205,23 @@ namespace MotivationButtons
                     }
                 }
                 diffNormalizedMBScoreArr.Add(new List<double>());
-                diffNormalizedMBScoreArr[mbIterator].Add(Math.Abs(tempWorkingScore - tempNotWorkingScore));
+                diffNormalizedMBScoreArr[mbIterator].Add(mbIterator);
+                diffNormalizedMBScoreArr[mbIterator].Add((tempWorkingScore/totalCandidate) - (tempNotWorkingScore/totalCandidate)); //this can be an 1d array in the future TODO!         
             }
+
+            //sorting the list!
+            diffNormalizedMBScoreArr = diffNormalizedMBScoreArr.AsEnumerable().Select(x => x.OrderBy(y => (double)y).ToList()).OrderByDescending(z => z[0]).ToList();
+
+            //debug
+            //for (int i = 0; i < 14; i++)
+            //{
+            //    MessageBox.Show(diffNormalizedMBScoreArr[i][1].ToString());
+            //    MessageBox.Show(diffNormalizedMBScoreArr[i][0].ToString());
+            //}
+        }
+
+        public void init()
+        {
 
         }
     }
