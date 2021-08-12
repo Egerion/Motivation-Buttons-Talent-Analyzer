@@ -65,17 +65,17 @@ namespace MotivationButtons
                     //pick top 3 motivation buttons...
                     if ((int)diffNormalizedMBScoreArr[0][0] == mbIterator)
                     {
-                        diffNormalizedMBScoreArr[mbIterator][1] += diffNormalizedMBScoreArr[mbIterator][1] + coeffIndex1; //increment the iteration
+                        diffNormalizedMBScoreArr[0][1] += diffNormalizedMBScoreArr[0][1] + coeffIndex1; //increment the iteration
 
                         //MessageBox.Show(diffNormalizedMBScoreArr[mbIterator][1].ToString());
                     }
                     else if ((int)diffNormalizedMBScoreArr[1][0] == mbIterator)
                     {
-                        diffNormalizedMBScoreArr[mbIterator][1] += diffNormalizedMBScoreArr[mbIterator][1] + coeffIndex2;
+                        diffNormalizedMBScoreArr[1][1] += diffNormalizedMBScoreArr[1][1] + coeffIndex2;
                     }
                     else if ((int)diffNormalizedMBScoreArr[2][0] == mbIterator)
                     {
-                        diffNormalizedMBScoreArr[mbIterator][1] += diffNormalizedMBScoreArr[mbIterator][1] + coeffIndex3;
+                        diffNormalizedMBScoreArr[2][1] += diffNormalizedMBScoreArr[2][1] + coeffIndex3;
                     }
                 }
                 //only pick if a candidate is not "candidate"
