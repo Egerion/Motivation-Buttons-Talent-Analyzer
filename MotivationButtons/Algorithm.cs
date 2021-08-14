@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace MotivationButtons
 {
@@ -59,6 +60,11 @@ namespace MotivationButtons
 
         public void PrintTopCandidates()
         {
+            //FileStream fileStream = new FileStream("C:\\Users\\Ege\\Documents\\GitHub\\MotivationButtons\\Result.txt", FileMode.Create);
+            FileStream fileStream = new FileStream(".\\Result.txt", FileMode.Create);
+            StreamWriter streamWriter = new StreamWriter(fileStream);
+            Console.SetOut(streamWriter);;
+
             CalculateTopCandidates(maxCoeffIndexes[0], maxCoeffIndexes[1], maxCoeffIndexes[2], true);
 
             for (int candidateIterator = 0; candidateIterator < totalSelectedOrder; candidateIterator++)
@@ -67,6 +73,8 @@ namespace MotivationButtons
                 Console.WriteLine("Score: "         + selectedCandidates[candidateIterator].finalScore);
                 Console.WriteLine("Work Status: "   + selectedCandidates[candidateIterator].workStatus);
             }
+
+            streamWriter.Close();
         }
 
         public void CalculateTopCandidates(double coeffIndex1, double coeffIndex2, double coeffIndex3, bool isFinalAnalysis)
@@ -124,7 +132,6 @@ namespace MotivationButtons
                     }
                 }
             }
-
             if (isFinalAnalysis == false)
             {
                 candidateOrder = candidateOrder.OrderByDescending(o => o.finalScore).ToList();
@@ -147,7 +154,7 @@ namespace MotivationButtons
             }
             else if (isFinalAnalysis == true)
             {
-                selectedCandidates = selectedCandidates.OrderByDescending(o => o.finalScore).ToList();
+                selectedCandidates = selectedCandidates.OrderByDescending(o => o.finalScore).ToList(); //ascending
             }
         }
     }
