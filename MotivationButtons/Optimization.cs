@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace MotivationButtons
 {
     public partial class Optimization
     {
+        //debug console 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
+
         [Flags]
         public enum MotivationButtonInfo
         {
@@ -24,7 +30,8 @@ namespace MotivationButtons
             BeingSincere,
             BeingTeamMate,
             BeingConvincing,
-            BeingStressed = 14
+            BeingStressed,
+            MotivationButtonLast
         }
 
         [Flags]
@@ -33,10 +40,27 @@ namespace MotivationButtons
             HighPerformance, //0
             Working, //1
             Candidate,  //2
-            NotWorking //3
+            NotWorking, //3
+            WorkingStatusLast
         }
 
+        public string[] WorkingStatusArr = { 
+            "Çalışan", 
+            "Ayrıldı", 
+            "Aday" 
+        };
+
         //constant paramters, which subject to change in the future...
+        //public const int mbScoreStartIndex = 96 - 4;
+        //public const int mbScoreStopIndex = 110 - 3;
+        //public const int totalMBScore = 180;
+        //public const int startColumn = 4;
+        //public const int startRow = 7;
+        //public const int minScoreIndex = 0;
+        //public const int maxScoreIndex = 1;
+        //public int workingStatusColumn = 126 - 1;
+        //public const int finalMBQuestionRowIndex = 92;
+
         public const int                mbScoreStartIndex           = 96  - 4;
         public const int                mbScoreStopIndex            = 110 - 3;
         public const int                totalMBScore                = 180;
@@ -44,7 +68,7 @@ namespace MotivationButtons
         public const int                startRow                    = 7;
         public const int                minScoreIndex               = 0;
         public const int                maxScoreIndex               = 1;
-        public       int                workingStatusColumn         = 126;
+        public       int                workingStatusColumn         = 129 - 4;
         public const int                finalMBQuestionRowIndex     = 92;
 
         //global variables
@@ -59,6 +83,11 @@ namespace MotivationButtons
         public int                      totalCandidate;
         public string[]                 mbNames                     = Enum.GetNames(typeof(MotivationButtonInfo));
         public string[]                 candidateWorkStatus         = Enum.GetNames(typeof(WorkingStatus));
+
+        public void ExecuteDebugMode()
+        {
+            AllocConsole();
+        }
 
         //functions
         public void LoadCandidateData(string path)
@@ -125,6 +154,7 @@ namespace MotivationButtons
 
         public void NormalizeMotivationButtons()
         {
+            Console.WriteLine("----------NORMALIZED MOTIVATION BUTTON SCORES----------");
             int tempNumber;
 
             //gather motivation buttons scores
@@ -141,7 +171,7 @@ namespace MotivationButtons
             }
 
             //find and store min max for all motivation buttons...
-            for(int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.BeingStressed; mbIterator++)
+            for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.MotivationButtonLast; mbIterator++)
             {
                 int tempMin     = 100;
                 int tempMax     = 0;
@@ -164,65 +194,57 @@ namespace MotivationButtons
                 mbMinMaxScoreArr[mbIterator].Add(tempMax);
 
                 //debugging the min max of motivation buttons...
-                //MessageBox.Show("Min MB: " + mbNames[mbIterator] + ": " + mbMinMaxScoreArr[mbIterator][minScoreIndex].ToString());
-                //MessageBox.Show("Max MB: " + mbNames[mbIterator] + ": " + mbMinMaxScoreArr[mbIterator][maxScoreIndex].ToString());
+                Console.WriteLine("Min MB: " + mbNames[mbIterator] + ": " + mbMinMaxScoreArr[mbIterator][minScoreIndex].ToString());
+                Console.WriteLine("Max MB: " + mbNames[mbIterator] + ": " + mbMinMaxScoreArr[mbIterator][maxScoreIndex].ToString());
             }
 
+            Console.WriteLine("----------MIN-MAX MOTIVATION BUTTON SCORES----------");
+
             //normalize the motivation buttons for all candidates...
-            for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.BeingStressed; mbIterator++)
+            for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.MotivationButtonLast; mbIterator++)
             {               
                 for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
                 {
                     normalizedMBScoreArr.Add(new List<double>());
-                    normalizedMBScoreArr[candidateIterator].Add(((mbScoreArr[candidateIterator][mbIterator] / mbMinMaxScoreArr[mbIterator][minScoreIndex]) / (mbMinMaxScoreArr[mbIterator][maxScoreIndex] - mbMinMaxScoreArr[mbIterator][minScoreIndex])));
+                    normalizedMBScoreArr[candidateIterator].Add(((mbScoreArr[candidateIterator][mbIterator] - mbMinMaxScoreArr[mbIterator][minScoreIndex]) / (mbMinMaxScoreArr[mbIterator][maxScoreIndex] - mbMinMaxScoreArr[mbIterator][minScoreIndex])));
                     //debugging the normalized values for all candidates...
-                    //MessageBox.Show("candidate: " + candidateArr[candidateIterator][0] + " normalized: " + mbNames[mbIterator] + ": " + normalizedMBScoreArr[candidateIterator][mbIterator].ToString());
+                    Console.WriteLine("candidate: " + candidateArr[candidateIterator][0] + " normalized: " + mbNames[mbIterator] + ": " + normalizedMBScoreArr[candidateIterator][mbIterator].ToString());
                 }
             }
         }
 
         public void ApplyCandidateCurrentWorkingStatus()
         {
-            for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.BeingStressed; mbIterator++)
+            Console.WriteLine("----------DIFF NORMALIZED MOTIVATION BUTTON SCORES----------");
+
+            for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.MotivationButtonLast; mbIterator++)
             {
                 double tempWorkingScore = 0.0;
                 double tempNotWorkingScore = 0.0;
 
                 for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
                 {
-                   if (    Int32.Parse(candidateArr[candidateIterator][workingStatusColumn]) == (int)WorkingStatus.HighPerformance 
-                        || Int32.Parse(candidateArr[candidateIterator][workingStatusColumn]) == (int)WorkingStatus.Working)
+                    if (candidateArr[candidateIterator][workingStatusColumn] == WorkingStatusArr[0]) 
                     {
                         tempWorkingScore += normalizedMBScoreArr[candidateIterator][mbIterator];
-                        //debugging
-                        //MessageBox.Show("Candidate: " + candidateArr[candidateIterator][0] + " work status is: " + candidateWorkStatus[0]);
                     }
-                    else if(Int32.Parse(candidateArr[candidateIterator][workingStatusColumn]) == (int)WorkingStatus.NotWorking)
+                    else if (candidateArr[candidateIterator][workingStatusColumn] == WorkingStatusArr[1])
                     {
                         tempNotWorkingScore += normalizedMBScoreArr[candidateIterator][mbIterator];
-                        //debugging
-                        //MessageBox.Show("Candidate: " + candidateArr[candidateIterator][0] + " work status is: " + candidateWorkStatus[1]);
                     }
                 }
                 diffNormalizedMBScoreArr.Add(new List<double>());
                 diffNormalizedMBScoreArr[mbIterator].Add(mbIterator);
                 diffNormalizedMBScoreArr[mbIterator].Add((tempWorkingScore/totalCandidate) - (tempNotWorkingScore/totalCandidate)); //this can be an 1d array in the future TODO!         
             }
-
             //sorting the list!
-            diffNormalizedMBScoreArr = diffNormalizedMBScoreArr.AsEnumerable().Select(x => x.OrderBy(y => (double)y).ToList()).OrderByDescending(z => z[0]).ToList();
-
+            diffNormalizedMBScoreArr = diffNormalizedMBScoreArr.OrderByDescending(y => y[1]).ToList(); //order the array with respect to final score!
             //debug
-            //for (int i = 0; i < 14; i++)
-            //{
-            //    MessageBox.Show(diffNormalizedMBScoreArr[i][1].ToString());
-            //    MessageBox.Show(diffNormalizedMBScoreArr[i][0].ToString());
-            //}
-        }
-
-        public void init()
-        {
-
+            for (int i = 0; i < (int)MotivationButtonInfo.MotivationButtonLast; i++)
+            {
+                Console.WriteLine("Motivation Button: " + mbNames[(int)diffNormalizedMBScoreArr[i][0]] + " " + diffNormalizedMBScoreArr[i][0].ToString());
+                Console.WriteLine("With diff-normalized score: " + diffNormalizedMBScoreArr[i][1].ToString());
+            }
         }
     }
 }

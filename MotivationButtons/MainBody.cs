@@ -17,6 +17,12 @@ namespace MotivationButtons
         public MainBody()
         { 
             InitializeComponent();
+            Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
+        }
+
+        private void OnApplicationExit(object sender, EventArgs e)
+        {
+            try { } catch { }
         }
 
         public void LoadCandidateNames()
@@ -38,6 +44,7 @@ namespace MotivationButtons
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 optimizationObj.LoadCandidateData(openFileDialog.FileName);
+                optimizationObj.ExecuteDebugMode();
                 optimizationObj.RemoveImproperCandidateData();
                 //System.Threading.Tasks.Task.Run(() => LoadCandidateNames());
                 LoadCandidateNames();

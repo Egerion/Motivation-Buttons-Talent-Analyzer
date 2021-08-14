@@ -9,11 +9,6 @@ namespace MotivationButtons
 {
     public partial class Optimization
     {
-        //debug console 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
-
         public int iterationCounter = 1;
 
         public class Order : Optimization
@@ -31,11 +26,19 @@ namespace MotivationButtons
                 this.workStatus = workStatus;
             }
         }
+        public List<Order> selectedCandidates = new List<Order>();
         public List<Order> candidateOrder = new List<Order>();
+
+        public double[] maxCoeffIndexes = new double [3];
+        public int totalWorkStatusScore = 0;
+
+        public int totalCandidateOrder = 0;
+        public int totalSelectedOrder = 0;
+        public int topCandidatePercentage = 0;
 
         public void SelectTopCandidates()
         {
-            AllocConsole();
+            Console.WriteLine("----------FINAL CALCULATION----------");
 
             for (double coeffIndex1 = 0; coeffIndex1 < 2.5; coeffIndex1+=0.5) //fractional incrementation...
             {
@@ -43,62 +46,108 @@ namespace MotivationButtons
                 {
                     for (double coeffIndex3 = 0; coeffIndex3 < 2.5; coeffIndex3 += 0.5)
                     {
-                        CalculateTopCandidates(coeffIndex1, coeffIndex2, coeffIndex3);
+                        CalculateTopCandidates(coeffIndex1, coeffIndex2, coeffIndex3, false);
+
                         Console.WriteLine("Iteration: " + iterationCounter);
                         iterationCounter++;
                     }
                 }
-            }     
+            }
+            //final adjustment
+            PrintTopCandidates();
         }
 
-        public void CalculateTopCandidates(double coeffIndex1, double coeffIndex2, double coeffIndex3)
+        public void PrintTopCandidates()
         {
-            int topCandidateIndex = (int)(totalCandidate * 0.3); //choose top 30%
+            CalculateTopCandidates(maxCoeffIndexes[0], maxCoeffIndexes[1], maxCoeffIndexes[2], true);
 
+            for (int candidateIterator = 0; candidateIterator < totalSelectedOrder; candidateIterator++)
+            {
+                Console.WriteLine("Name Surname: "  + selectedCandidates[candidateIterator].nameSurname);
+                Console.WriteLine("Score: "         + selectedCandidates[candidateIterator].finalScore);
+                Console.WriteLine("Work Status: "   + selectedCandidates[candidateIterator].workStatus);
+            }
+        }
+
+        public void CalculateTopCandidates(double coeffIndex1, double coeffIndex2, double coeffIndex3, bool isFinalAnalysis)
+        {
             for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
             {
                 double tempScore = 0;
-                for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.BeingStressed; mbIterator++)
+                for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.MotivationButtonLast; mbIterator++)
                 {
-                    tempScore += diffNormalizedMBScoreArr[mbIterator][1] * normalizedMBScoreArr[candidateIterator][mbIterator];
-
                     //pick top 3 motivation buttons...
                     if ((int)diffNormalizedMBScoreArr[0][0] == mbIterator)
                     {
-                        diffNormalizedMBScoreArr[0][1] += diffNormalizedMBScoreArr[0][1] + coeffIndex1; //increment the iteration
-
-                        //MessageBox.Show(diffNormalizedMBScoreArr[mbIterator][1].ToString());
+                        tempScore += (diffNormalizedMBScoreArr[0][1] +  coeffIndex1) * normalizedMBScoreArr[candidateIterator][mbIterator];
                     }
                     else if ((int)diffNormalizedMBScoreArr[1][0] == mbIterator)
                     {
-                        diffNormalizedMBScoreArr[1][1] += diffNormalizedMBScoreArr[1][1] + coeffIndex2;
+                        tempScore += (diffNormalizedMBScoreArr[1][1] + coeffIndex2) * normalizedMBScoreArr[candidateIterator][mbIterator];
                     }
                     else if ((int)diffNormalizedMBScoreArr[2][0] == mbIterator)
                     {
-                        diffNormalizedMBScoreArr[2][1] += diffNormalizedMBScoreArr[2][1] + coeffIndex3;
+                        tempScore += (diffNormalizedMBScoreArr[2][1] +  coeffIndex3) * normalizedMBScoreArr[candidateIterator][mbIterator];
+                    }
+                    else
+                    {
+                        for(int i = 0; i < (int)MotivationButtonInfo.MotivationButtonLast; i++)
+                        {
+                            if((int)diffNormalizedMBScoreArr[i][0] == mbIterator)
+                            {
+                                tempScore += diffNormalizedMBScoreArr[i][1] * normalizedMBScoreArr[candidateIterator][mbIterator];
+                                break;
+                            }
+                        }
                     }
                 }
-                //only pick if a candidate is not "candidate"
-                if (Int32.Parse(candidateArr[candidateIterator][workingStatusColumn]) != (int)WorkingStatus.Candidate)
+                if(isFinalAnalysis == false)
                 {
-                    var candidate = new Order(candidateIterator, candidateArr[candidateIterator][0], candidateArr[candidateIterator][workingStatusColumn], tempScore);
-                    candidateOrder.Add(candidate);
+                    if (iterationCounter == 1 && candidateArr[candidateIterator][workingStatusColumn] != WorkingStatusArr[(int)WorkingStatus.Candidate]) //pick non candidates
+                    {
+                        var candidate = new Order(candidateIterator, candidateArr[candidateIterator][0], candidateArr[candidateIterator][workingStatusColumn], tempScore);
+                        candidateOrder.Add(candidate);
+
+                        candidateOrder[totalCandidateOrder].finalScore = tempScore;
+                        totalCandidateOrder++;
+                    }
                 }
-                //debug
-                //MessageBox.Show(candidateOrder[candidateIterator].nameSurname);
-                //MessageBox.Show(candidateOrder[candidateIterator].finalScore.ToString());
+                else if (isFinalAnalysis == true)
+                {
+                    if (candidateArr[candidateIterator][workingStatusColumn] == WorkingStatusArr[(int)WorkingStatus.Candidate]) //pick only candidates
+                    {
+                        var candidate = new Order(candidateIterator, candidateArr[candidateIterator][0], candidateArr[candidateIterator][workingStatusColumn], tempScore);
+                        selectedCandidates.Add(candidate);
+
+                        selectedCandidates[totalSelectedOrder].finalScore = tempScore;
+                        totalSelectedOrder++;
+                    }
+                }
             }
-            candidateOrder = candidateOrder.OrderBy(o => o.finalScore).ToList();
 
-            for (int candidateIterator = 0; candidateIterator < topCandidateIndex; candidateIterator++)
+            if (isFinalAnalysis == false)
             {
-                Console.WriteLine(candidateOrder[candidateIterator].nameSurname);
-                Console.WriteLine(candidateOrder[candidateIterator].workStatus);
-                Console.WriteLine(candidateOrder[candidateIterator].finalScore);
-
-                //MessageBox.Show(candidateOrder[candidateIterator].nameSurname);
-                //MessageBox.Show(candidateOrder[candidateIterator].workStatus);
-                //MessageBox.Show(candidateOrder[candidateIterator].finalScore.ToString());
+                candidateOrder = candidateOrder.OrderByDescending(o => o.finalScore).ToList();
+                topCandidatePercentage = (int)(totalCandidateOrder * 0.3); //choose top 30%
+                int tempTotalWorkStatusScore = 0;
+                for (int candidateIterator = 0; candidateIterator < topCandidatePercentage; candidateIterator++)
+                {
+                    if (candidateOrder[candidateIterator].workStatus == WorkingStatusArr[1])
+                    {
+                        tempTotalWorkStatusScore++;
+                    }
+                }
+                if (totalWorkStatusScore < tempTotalWorkStatusScore)
+                {
+                    totalWorkStatusScore = tempTotalWorkStatusScore;
+                    maxCoeffIndexes[0] = coeffIndex1;
+                    maxCoeffIndexes[1] = coeffIndex2;
+                    maxCoeffIndexes[2] = coeffIndex3;
+                }
+            }
+            else if (isFinalAnalysis == true)
+            {
+                selectedCandidates = selectedCandidates.OrderByDescending(o => o.finalScore).ToList();
             }
         }
     }

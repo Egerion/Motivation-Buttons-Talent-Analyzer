@@ -25,14 +25,11 @@ namespace MotivationButtons
         }
 
         //read cell
-        public string ReadCell(int i, int j)
+        public string ReadCell(int rows, int columns)
         {
-            //++i;
-            //++j;
-
-            if (workSheet.Cells[i, j].Value2 != null)
+            if (workSheet.Cells[rows, columns].Value2 != null)
             {
-                return workSheet.Cells[i, j].Value2.ToString();
+                return workSheet.Cells[rows, columns].Value2.ToString();
             }
             else
             {
