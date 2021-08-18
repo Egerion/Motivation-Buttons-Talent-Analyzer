@@ -50,7 +50,7 @@ namespace MotivationButtons
                 LoadCandidateNames();
                 optimizationObj.NormalizeMotivationButtons();
                 optimizationObj.ApplyCandidateCurrentWorkingStatus();
-                optimizationObj.SelectTopCandidates();
+                optimizationObj.IterativePermutation();
 
 
             }
