@@ -1,0 +1,57 @@
+Name Surname: FEDİLA BAŞAKÇI
+Score: 7.249569789700875
+Work Status: Aday
+Name Surname: ZEHRA DOĞAN
+Score: 6.555771874073591
+Work Status: Aday
+Name Surname: ŞEYDA YILMAZ
+Score: 6.473566905634729
+Work Status: Aday
+Name Surname: SEFA DEMİRCİOĞLU
+Score: 6.450733968171333
+Work Status: Aday
+Name Surname: DENİZ YAPRAK
+Score: 6.342468041184935
+Work Status: Aday
+Name Surname: NECLA DERTLİ
+Score: 6.330101339992623
+Work Status: Aday
+Name Surname: KADİR DÖKMECİ
+Score: 6.23983011485651
+Work Status: Aday
+Name Surname: AHMET ASIM KIZILTEPE
+Score: 6.217869189388517
+Work Status: Aday
+Name Surname: KAMİL KIRDÖK
+Score: 6.215541203010781
+Work Status: Aday
+Name Surname: YUSUF PEKGÖZ
+Score: 6.197047994258982
+Work Status: Aday
+Name Surname: DİYAR AKAR
+Score: 6.196855803019457
+Work Status: Aday
+Name Surname: MURAT BARUT
+Score: 6.189354225866393
+Work Status: Aday
+Name Surname: MESUT EROL
+Score: 5.937895494855499
+Work Status: Aday
+Name Surname: MUSA CAN BAYRAKTAR
+Score: 5.920978761306697
+Work Status: Aday
+Name Surname: FEYAZ GÜÇLÜ
+Score: 5.80107474620941
+Work Status: Aday
+Name Surname: MELİSA BAYSAL
+Score: 5.781756464971837
+Work Status: Aday
+Name Surname: MUHAMMET YAMAN
+Score: 5.651705105818384
+Work Status: Aday
+Name Surname: YAĞMUR BAŞAKÇI
+Score: 5.410089233422267
+Work Status: Aday
+Name Surname: SERGEN UZUN
+Score: 5.14953894257536
+Work Status: Aday

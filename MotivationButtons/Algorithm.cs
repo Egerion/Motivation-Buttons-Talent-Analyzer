@@ -48,16 +48,10 @@ namespace MotivationButtons
                 {
                     for (double coeffIndex3 = 1.5; coeffIndex3 < 4.0; coeffIndex3 += 0.5)
                     {
-                        for (double coeffIndex4 = 1.5; coeffIndex4 < 4.0; coeffIndex4 += 0.5)
-                        {                  
-                            for (double coeffIndex5 = 1.5; coeffIndex5 < 4.0; coeffIndex5 += 0.5)
-                            {
-                                CalculateFinalScores(coeffIndex1, coeffIndex2, coeffIndex3, coeffIndex4, coeffIndex5, false);
+                        CalculateFinalScores(coeffIndex1, coeffIndex2, coeffIndex3, false);
 
-                                //Console.WriteLine("Iteration: " + iterationCounter);
-                                iterationCounter++;
-                            }                         
-                        }
+                        Console.WriteLine("Iteration: " + iterationCounter);
+                        iterationCounter++;               
                     }
                 }
             }       
@@ -66,14 +60,13 @@ namespace MotivationButtons
 
         private void PrintTopCandidates()
         {
-            //FileStream fileStream = new FileStream("C:\\Users\\Ege\\Documents\\GitHub\\MotivationButtons\\Result.txt", FileMode.Create);
-            FileStream fileStream = new FileStream(".\\Result.txt", FileMode.Create);
+
+            FileStream fileStream = new FileStream("C:\\Users\\Ege\\Documents\\GitHub\\MotivationButtons\\Result.txt", FileMode.Create);
+            //FileStream fileStream = new FileStream(".\\Result.txt", FileMode.Create);
             StreamWriter streamWriter = new StreamWriter(fileStream);
             Console.SetOut(streamWriter);
 
-            CalculateFinalScores(maxCoeffIndexes[0], maxCoeffIndexes[1], maxCoeffIndexes[2],
-                                 maxCoeffIndexes[3], maxCoeffIndexes[4], /*maxCoeffIndexes[5],
-                                 maxCoeffIndexes[6], maxCoeffIndexes[7],*/ true);
+            CalculateFinalScores(maxCoeffIndexes[0], maxCoeffIndexes[1], maxCoeffIndexes[2], true);
 
             for (int candidateIterator = 0; candidateIterator < totalSelectedOrder; candidateIterator++)
             {
@@ -87,23 +80,7 @@ namespace MotivationButtons
             MessageBox.Show("Calculation are done!","JB", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-       private void FindTopCandidatePercentageScore()
-       {
-            for(int candidateIterator = 0; candidateIterator < (int)(topCandidatePercentage * 0.1); candidateIterator++)
-            {
-                if (candidateOrder[candidateIterator].workStatus == WorkingStatusArr[(int)WorkingStatus.Working])
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-       }
-        private void CalculateFinalScores(double coeffIndex1, double coeffIndex2, double coeffIndex3,
-                                          double coeffIndex4, double coeffIndex5,/* double coeffIndex6,
-                                          double coeffIndex7, double coeffIndex8, */bool isFinalAnalysis)
+        private void CalculateFinalScores(double coeffIndex1, double coeffIndex2, double coeffIndex3, bool isFinalAnalysis)
         {
             for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
             {
@@ -122,14 +99,14 @@ namespace MotivationButtons
                     {
                         tempScore += (diffNormalizedMBScoreArr[2][1] +  coeffIndex3) * normalizedMBScoreArr[candidateIterator][mbIterator];
                     }
-                    else if ((int)diffNormalizedMBScoreArr[3][mbNameIndex] == mbIterator)
-                    {
-                        tempScore += (diffNormalizedMBScoreArr[3][1] + coeffIndex4) * normalizedMBScoreArr[candidateIterator][mbIterator];
-                    }
-                    else if ((int)diffNormalizedMBScoreArr[4][mbNameIndex] == mbIterator)
-                    {
-                        tempScore += (diffNormalizedMBScoreArr[4][1] + coeffIndex5) * normalizedMBScoreArr[candidateIterator][mbIterator];
-                    }
+                    //else if ((int)diffNormalizedMBScoreArr[3][mbNameIndex] == mbIterator)
+                    //{
+                    //    tempScore += (diffNormalizedMBScoreArr[3][1] + coeffIndex4) * normalizedMBScoreArr[candidateIterator][mbIterator];
+                    //}
+                    //else if ((int)diffNormalizedMBScoreArr[4][mbNameIndex] == mbIterator)
+                    //{
+                    //    tempScore += (diffNormalizedMBScoreArr[4][1] + coeffIndex5) * normalizedMBScoreArr[candidateIterator][mbIterator];
+                    //}
                     //else if ((int)diffNormalizedMBScoreArr[5][mbNameIndex] == mbIterator)
                     //{
                     //    tempScore += (diffNormalizedMBScoreArr[5][1] + coeffIndex6) * normalizedMBScoreArr[candidateIterator][mbIterator];
@@ -164,6 +141,10 @@ namespace MotivationButtons
                         candidateOrder[totalCandidateOrder].finalScore = tempScore;
                         totalCandidateOrder++;
                     }
+                    else if(iterationCounter > 1 && candidateIterator < totalCandidateOrder)
+                    {
+                        candidateOrder[candidateIterator].finalScore = tempScore;
+                    }
                 }
                 else if (isFinalAnalysis == true)
                 {
@@ -194,14 +175,12 @@ namespace MotivationButtons
                     maxCoeffIndexes[0] = coeffIndex1;
                     maxCoeffIndexes[1] = coeffIndex2;
                     maxCoeffIndexes[2] = coeffIndex3;
-                    maxCoeffIndexes[3] = coeffIndex4;
-                    maxCoeffIndexes[4] = coeffIndex5;
-                    //maxCoeffIndexes[5] = coeffIndex6;
-                    //maxCoeffIndexes[6] = coeffIndex7;
-                    //maxCoeffIndexes[7] = coeffIndex8;
 
                     totalCandidateWorkers = tempTotalWorkStatusScore;
                 }
+
+                Console.WriteLine("Total Workers: " + totalCandidateWorkers.ToString());
+                Console.WriteLine("Coeff. list: " + coeffIndex1.ToString() + " " + coeffIndex2.ToString() + " " + coeffIndex3.ToString());
             }
             else if (isFinalAnalysis == true)
             {
