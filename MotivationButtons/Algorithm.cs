@@ -48,10 +48,16 @@ namespace MotivationButtons
                 {
                     for (double coeffIndex3 = 1.5; coeffIndex3 < 4.0; coeffIndex3 += 0.5)
                     {
-                        CalculateFinalScores(coeffIndex1, coeffIndex2, coeffIndex3, false);
+                      //  for (double coeffIndex4 = 1.5; coeffIndex4 < 4.0; coeffIndex4 += 0.5)
+                      //  {
+                       //     for (double coeffIndex5 = 1.5; coeffIndex5 < 4.0; coeffIndex5 += 0.5)
+                        //    {
+                                CalculateFinalScores(coeffIndex1, coeffIndex2, coeffIndex3, /*coeffIndex4, coeffIndex5,*/ false);
 
-                        Console.WriteLine("Iteration: " + iterationCounter);
-                        iterationCounter++;               
+                                Console.WriteLine("Iteration: " + iterationCounter);
+                                iterationCounter++;
+                        //    }
+                       // }
                     }
                 }
             }       
@@ -60,14 +66,13 @@ namespace MotivationButtons
 
         private void PrintTopCandidates()
         {
-
-            FileStream fileStream = new FileStream("C:\\Users\\Ege\\Documents\\GitHub\\MotivationButtons\\Result.txt", FileMode.Create);
+            FileStream fileStream = new FileStream("C:\\Users\\egede\\Documents\\GitHub\\MotivationButtons\\Result.txt", FileMode.Create);
             //FileStream fileStream = new FileStream(".\\Result.txt", FileMode.Create);
             StreamWriter streamWriter = new StreamWriter(fileStream);
             Console.SetOut(streamWriter);
 
-            CalculateFinalScores(maxCoeffIndexes[0], maxCoeffIndexes[1], maxCoeffIndexes[2], true);
-
+            CalculateFinalScores(maxCoeffIndexes[0], maxCoeffIndexes[1], maxCoeffIndexes[2], /*maxCoeffIndexes[3], maxCoeffIndexes[4],*/ true);
+             
             for (int candidateIterator = 0; candidateIterator < totalSelectedOrder; candidateIterator++)
             {
                 Console.WriteLine("Name Surname: "  + selectedCandidates[candidateIterator].nameSurname);
@@ -80,7 +85,7 @@ namespace MotivationButtons
             MessageBox.Show("Calculation are done!","JB", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void CalculateFinalScores(double coeffIndex1, double coeffIndex2, double coeffIndex3, bool isFinalAnalysis)
+        private void CalculateFinalScores(double coeffIndex1, double coeffIndex2, double coeffIndex3, /*double coeffIndex4, double coeffIndex5,*/ bool isFinalAnalysis)
         {
             for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
             {
@@ -175,11 +180,14 @@ namespace MotivationButtons
                     maxCoeffIndexes[0] = coeffIndex1;
                     maxCoeffIndexes[1] = coeffIndex2;
                     maxCoeffIndexes[2] = coeffIndex3;
+                    //maxCoeffIndexes[3] = coeffIndex4;
+                    //maxCoeffIndexes[4] = coeffIndex5;
 
                     totalCandidateWorkers = tempTotalWorkStatusScore;
                 }
 
                 Console.WriteLine("Total Workers: " + totalCandidateWorkers.ToString());
+                Console.WriteLine("Total Candidates: " + topCandidatePercentage.ToString());
                 Console.WriteLine("Coeff. list: " + coeffIndex1.ToString() + " " + coeffIndex2.ToString() + " " + coeffIndex3.ToString());
             }
             else if (isFinalAnalysis == true)
