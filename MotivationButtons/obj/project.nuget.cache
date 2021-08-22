@@ -1,10 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "TEZ876sqduzeixS2RcU7hYNuwbLZGsXX2fNAkMkL/TfVKbgT190f4aK+HoIRn3gbXLBordcVEmWA3hrox0AJRw==",
+  "dgSpecHash": "T8mcRaNfEv4cmKvVCBnvG9VarE31WU3ZJlBVVw2S6Q6pSb/vLZvOTaddQF50B8ZnAbp9bkI3+9d+Pe7O5Sh7IA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\egede\\Documents\\GitHub\\MotivationButtons\\MotivationButtons\\MotivationButtons.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\egede\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.8\\microsoft.netcore.app.host.win-x64.5.0.8.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\Ege\\Documents\\GitHub\\MotivationButtons\\MotivationButtons\\MotivationButtons.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

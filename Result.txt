@@ -1,0 +1,10 @@
+53.333336
+53.333336
+48.88889
+47.5
+50
+Name, Surname: OĞUZHAN GİTMEZ  Score: 14.817172 Percentage: 0
+Name, Surname: BESTE ALEMDAR Score: 14.793434 Percentage: 0
+Name, Surname: ANIL GÜNDÜZ Score: 14.789899 Percentage: 0
+Name, Surname: NURİ CAN BIYIKLI Score: 14.785858 Percentage: 0
+Name, Surname: SEREN MENGÜÇ Score: 14.764647 Percentage: 0

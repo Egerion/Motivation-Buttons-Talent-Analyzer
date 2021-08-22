@@ -230,30 +230,44 @@ namespace MotivationButtons
 
             for (int mbIterator = 0; mbIterator < (int)MotivationButtonInfo.MotivationButtonLast; mbIterator++)
             {
+                int tempWorkingCounter = 0;
                 double tempWorkingScore = 0.0;
+                int tempNotWorkingCounter = 0;
                 double tempNotWorkingScore = 0.0;
-
+              
                 for (int candidateIterator = 0; candidateIterator < totalCandidate; candidateIterator++)
                 {
-                    if (candidateArr[candidateIterator][workingStatusColumn] == WorkingStatusArr[(int)WorkingStatus.Working]) 
+                    if (candidateArr[candidateIterator][workingStatusColumn] == WorkingStatusArr[(int)WorkingStatus.Working])
                     {
                         tempWorkingScore += normalizedMBScoreArr[candidateIterator][mbIterator];
+                        tempWorkingCounter++;
                     }
                     else if (candidateArr[candidateIterator][workingStatusColumn] == WorkingStatusArr[(int)WorkingStatus.NotWorking])
                     {
                         tempNotWorkingScore += normalizedMBScoreArr[candidateIterator][mbIterator];
+                        tempNotWorkingCounter++;
                     }
+
                 }
                 diffNormalizedMBScoreArr.Add(new List<double>());
                 diffNormalizedMBScoreArr[mbIterator].Add(mbIterator);
-                diffNormalizedMBScoreArr[mbIterator].Add(Math.Abs((tempWorkingScore/totalCandidate) - (tempNotWorkingScore/totalCandidate))); //this can be an 1d array in the future TODO!         
+
+                double tempScore = (tempWorkingScore / tempWorkingCounter) - (tempNotWorkingScore / tempNotWorkingCounter);
+                if (tempScore < 0)
+                {
+                    for (int candidateIterators = 0; candidateIterators < totalCandidate; candidateIterators++)
+                    {
+                        normalizedMBScoreArr[candidateIterators][mbIterator] = (1 - normalizedMBScoreArr[candidateIterators][mbIterator]);
+                    }
+                }
+               diffNormalizedMBScoreArr[mbIterator].Add(Math.Abs(tempScore)); //this can be an 1d array in the future TODO!         
             }
             //sorting the list!
             diffNormalizedMBScoreArr = diffNormalizedMBScoreArr.OrderByDescending(y => y[1]).ToList(); //order the array with respect to final score!
             //debug
             for (int i = 0; i < (int)MotivationButtonInfo.MotivationButtonLast; i++)
             {
-                Console.WriteLine("Motivation Button: " + mbNames[(int)diffNormalizedMBScoreArr[i][0]] + " " + diffNormalizedMBScoreArr[i][0].ToString());
+                Console.WriteLine("Motivation Button: " + mbNames[(int)diffNormalizedMBScoreArr[i][0]] + " " + diffNormalizedMBScoreArr[i][mbNameIndex].ToString());
                 Console.WriteLine("With diff-normalized score: " + diffNormalizedMBScoreArr[i][1].ToString());
             }
         }
