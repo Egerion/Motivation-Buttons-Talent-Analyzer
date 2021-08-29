@@ -4,9 +4,6 @@
     <_LastSelectedProfileId>C:\Users\Ege\Documents\GitHub\MotivationButtons\MotivationButtons\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="Excel.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="MainBody.cs">
       <SubType>Form</SubType>
     </Compile>

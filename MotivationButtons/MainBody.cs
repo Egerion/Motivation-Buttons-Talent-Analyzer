@@ -12,11 +12,12 @@ namespace MotivationButtons
 {
     public partial class MainBody : Form
     {
-        public Optimization optimizationObj = new Optimization();
+        public DataAggregation optimizationObj = new DataAggregation();
 
         public MainBody()
         { 
             InitializeComponent();
+            LoadInitialSettings();
             Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
         }
 
@@ -25,13 +26,10 @@ namespace MotivationButtons
             try { } catch { }
         }
 
-        public void LoadCandidateNames()
+        private void LoadInitialSettings()
         {
-            for (int i = 0; i < optimizationObj.totalCandidate; i++)
-            {
-                ListBox_Candidates.Items.Add(optimizationObj.candidateArr[i][0]);
-                ListBox_Candidates.SelectedIndex = 0;  
-            }
+            ComboBox_TresholdPercentage.SelectedIndex = 0;
+            TextBox_MaxStep.Text = (10000).ToString();
         }
 
         private void Button_LoadExcel_Click(object sender, EventArgs e)
@@ -43,17 +41,80 @@ namespace MotivationButtons
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                optimizationObj.LoadCandidateData(openFileDialog.FileName);
-                optimizationObj.ExecuteDebugMode();
-                optimizationObj.RemoveImproperCandidateData();
-                //System.Threading.Tasks.Task.Run(() => LoadCandidateNames());
-                LoadCandidateNames();
+                Label_CurrentStatus.Text = "working...";
+                PictureBox_Progress.Visible = true;
+                if (CheckBox_DebugMode.Checked)
+                {
+                    optimizationObj.ExecuteDebugMode();
+                }
+                optimizationObj.GetExcelData(openFileDialog.FileName);
+                optimizationObj.RemoveImproperTrainDataPerson();
                 optimizationObj.NormalizeMotivationButtons();
-                optimizationObj.ApplyCandidateCurrentWorkingStatus();
-                optimizationObj.IterativePermutation();
-
-
+                optimizationObj.IterativePermutationDo();
+                LoadCandidateResults();
+                //PictureBox_Progress.Image = global::MotivationButtons.Properties.Resources.Green_Tick;
+                PictureBox_Progress.Visible = false;
+                Label_CurrentStatus.Text = "Idle";
             }
+        }
+        private void LoadCandidateResults()
+        {
+            for (int candidateIterator = 0; candidateIterator < optimizationObj.totalCandidateData; candidateIterator++)
+            {
+                ListBox_Candidates.Items.Add(optimizationObj.candidateList[candidateIterator].nameSurname);
+                ListBox_CandidatePercentile.Items.Add(optimizationObj.candidateList[candidateIterator].percentage);
+                ListBox_CandidateStatus.Items.Add(optimizationObj.candidateList[candidateIterator].selectionStatus);
+            }
+        }
+
+        private void ComboBox_TresholdPercentage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            double oValue = 0.0;
+            switch (ComboBox_TresholdPercentage.SelectedIndex)
+            {
+                case 0:
+                    oValue = 0.2;
+                    break;
+                case 1:
+                    oValue = 0.4;
+                    break;
+                case 2:
+                    oValue = 0.6;
+                    break;
+                case 3:
+                    oValue = 0.8;
+                    break;
+                default:
+                    break;
+            }
+            optimizationObj.eliminationPercentile = oValue;
+        }
+
+        private void TextBox_MaxStep_TextChanged(object sender, EventArgs e)
+        {
+            if (System.Text.RegularExpressions.Regex.IsMatch(TextBox_MaxStep.Text, "[^0-9]"))
+            {
+                MessageBox.Show
+                    ("Please enter only numbers.");
+                TextBox_MaxStep.Text = TextBox_MaxStep.Text.Remove(TextBox_MaxStep.Text.Length - 1);
+            }
+            else
+            {
+                int EnteredAmount;
+                if (!int.TryParse(TextBox_MaxStep.Text, out EnteredAmount))
+                {
+                    optimizationObj.endStep = EnteredAmount;
+                }
+                else
+                {
+                    optimizationObj.endStep = 10000;
+                }
+            }
+        }
+
+        private void CheckBox_DebugMode_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

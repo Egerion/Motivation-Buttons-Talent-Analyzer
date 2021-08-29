@@ -1,0 +1,15 @@
+---Percentiles---
+Percentile: 81%  found workers: 376 over: 467
+Percentile: 75%  found workers: 701 over: 934
+Percentile: 74%  found workers: 1036 over: 1401
+Percentile: 73%  found workers: 1357 over: 1868
+Percentile: 71%  found workers: 1670 over: 2337
+---Candidates---
+Candidate: İSİMSİZ Percentage: 81
+Candidate: İSİMSİZ Percentage: 81
+Candidate: İSİMSİZ Percentage: 75
+Candidate: İSİMSİZ Percentage: 74
+Candidate: İSİMSİZ Percentage: 73
+---Golden Parameters---
+Golden Iteration: 2478 Final Iteration: 12479 Max Found Worker: 376
+Golden Coeffs  C1: -0.6 C2: -0.6 C3: -0.6 C4: -0.39999999999999997 C5: 0.4000000000000001 C6: -0.19999999999999996 C7: 0.4000000000000001
