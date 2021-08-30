@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Diagnostics;
+using SharpLearning.RandomForest.Learners;
+using SharpLearning.InputOutput.Csv;
 
 namespace MotivationButtons
 {
@@ -47,7 +50,7 @@ namespace MotivationButtons
         public int favorJobCount;
         public string favorGender;
 
-        public int endStep = 10000;
+        public int endAfterStep = 10000;
         public int stepCounter = 0;
 
         private void PrintTopCandidatesDo()
@@ -250,8 +253,7 @@ namespace MotivationButtons
                     else
                     {
                         candidateList[candidateIterator].selectionStatus = CandidateStatusArr[1];
-                    }
-                   
+                    }                 
                 }
                 else
                 {
@@ -284,6 +286,10 @@ namespace MotivationButtons
                     if ((int)diffNormalizedMBScoreArr[0][mbNameIndex] == mbIterator)
                     {
                         tempScore += normMBScoresArr[dataType][sampleIterator][mbIterator] + coeffIndex1;
+                        //DEBUG ICIN - ben test ettim doğru buluyor...
+                        //MessageBox.Show(trainingList[sampleIterator].nameSurname); 
+                        //MessageBox.Show(mbNames[(int)diffNormalizedMBScoreArr[0][mbNameIndex]]);
+                        //MessageBox.Show(normMBScoresArr[dataType][sampleIterator][mbIterator].ToString());
                     }
                     else if ((int)diffNormalizedMBScoreArr[1][mbNameIndex] == mbIterator)
                     {
@@ -353,7 +359,7 @@ namespace MotivationButtons
 
                     stepCounter = 0;
                 }
-                if(stepCounter >= endStep)
+                if(stepCounter >= endAfterStep)
                 {
                     finalIteration = true;
                 }

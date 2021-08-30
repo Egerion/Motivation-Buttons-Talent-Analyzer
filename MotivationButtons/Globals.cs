@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace MotivationButtons
 {
@@ -37,7 +36,8 @@ namespace MotivationButtons
             WorkingStatusLast
         }
 
-        public string[] WorkingStatusArr = {
+        public string[] WorkingStatusArr = 
+        {
             "Çalışan",
             "Ayrıldı",
             "Aday",
@@ -72,10 +72,10 @@ namespace MotivationButtons
         public const int mbScoreStartIndex                          = 96  - startColumn;
         public const int mbScoreStopIndex                           = 111 - startColumn;
         public const int genderColumn                               = 117 - startColumn;
-        public const int totalMBScore                               = 180;
         public const int workingStatusColumn                        = 129 - startColumn;
         public const int ageColumn                                  = 128 - startColumn;
         public const int jobCountColumn                             = 123 - startColumn;
+        public const int totalMBScore                               = 180;
 
         //array indexes 
         public const int minScoreIndex                              = 0;
@@ -95,15 +95,19 @@ namespace MotivationButtons
 
         public string               excelPath;
         public int                  totalTrainDataPerson;
+
+        //string arrays
         public string[]             mbNames                         = Enum.GetNames(typeof(MotivationButtonInfo));
         public string[]             candidateWorkStatus             = Enum.GetNames(typeof(WorkingStatus));
-
         public double[]             goldenCoeffIndexes              = new double[15];
 
         public int                  totalTopPercentWorkerAmount     = 0;
         public int                  topTrainingDataPercentage       = 0;
         public int                  iterationCounter                = 1;
         public int                  goldenIteration                 = 0;
-        public double               eliminationPercentile           = 0.0;
+        public double               eliminationPercentile           = 0.2;
+        public double               startStep                       = -0.6;
+        public double               iterationStep                   = 0.20;
+        public double               endStep                         = 1.60;
     }
 }

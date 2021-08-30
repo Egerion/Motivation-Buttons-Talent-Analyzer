@@ -31,6 +31,13 @@ namespace MotivationButtons
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainBody));
             this.SidePanel = new System.Windows.Forms.Panel();
+            this.TextBox_IterationEnd = new System.Windows.Forms.TextBox();
+            this.Label_IterationEnd = new System.Windows.Forms.Label();
+            this.TextBox_IterationStep = new System.Windows.Forms.TextBox();
+            this.Label_IterationStep = new System.Windows.Forms.Label();
+            this.Label_IterationStart = new System.Windows.Forms.Label();
+            this.Label_IterationSettings = new System.Windows.Forms.Label();
+            this.TextBox_IterationStart = new System.Windows.Forms.TextBox();
             this.Label_MaxStep = new System.Windows.Forms.Label();
             this.TextBox_MaxStep = new System.Windows.Forms.TextBox();
             this.Label_TresholdPercentage = new System.Windows.Forms.Label();
@@ -55,6 +62,13 @@ namespace MotivationButtons
             // 
             this.SidePanel.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.SidePanel.BackgroundImage = global::MotivationButtons.Properties.Resources.grey;
+            this.SidePanel.Controls.Add(this.TextBox_IterationEnd);
+            this.SidePanel.Controls.Add(this.Label_IterationEnd);
+            this.SidePanel.Controls.Add(this.TextBox_IterationStep);
+            this.SidePanel.Controls.Add(this.Label_IterationStep);
+            this.SidePanel.Controls.Add(this.Label_IterationStart);
+            this.SidePanel.Controls.Add(this.Label_IterationSettings);
+            this.SidePanel.Controls.Add(this.TextBox_IterationStart);
             this.SidePanel.Controls.Add(this.Label_MaxStep);
             this.SidePanel.Controls.Add(this.TextBox_MaxStep);
             this.SidePanel.Controls.Add(this.Label_TresholdPercentage);
@@ -67,10 +81,70 @@ namespace MotivationButtons
             this.SidePanel.Size = new System.Drawing.Size(344, 629);
             this.SidePanel.TabIndex = 0;
             // 
+            // TextBox_IterationEnd
+            // 
+            this.TextBox_IterationEnd.Location = new System.Drawing.Point(146, 315);
+            this.TextBox_IterationEnd.Name = "TextBox_IterationEnd";
+            this.TextBox_IterationEnd.Size = new System.Drawing.Size(93, 31);
+            this.TextBox_IterationEnd.TabIndex = 14;
+            this.TextBox_IterationEnd.TextChanged += new System.EventHandler(this.TextBox_IterationEnd_TextChanged);
+            // 
+            // Label_IterationEnd
+            // 
+            this.Label_IterationEnd.AutoSize = true;
+            this.Label_IterationEnd.Location = new System.Drawing.Point(94, 318);
+            this.Label_IterationEnd.Name = "Label_IterationEnd";
+            this.Label_IterationEnd.Size = new System.Drawing.Size(42, 25);
+            this.Label_IterationEnd.TabIndex = 13;
+            this.Label_IterationEnd.Text = "End";
+            // 
+            // TextBox_IterationStep
+            // 
+            this.TextBox_IterationStep.Location = new System.Drawing.Point(146, 277);
+            this.TextBox_IterationStep.Name = "TextBox_IterationStep";
+            this.TextBox_IterationStep.Size = new System.Drawing.Size(93, 31);
+            this.TextBox_IterationStep.TabIndex = 12;
+            this.TextBox_IterationStep.TextChanged += new System.EventHandler(this.TextBox_IterationStep_TextChanged);
+            // 
+            // Label_IterationStep
+            // 
+            this.Label_IterationStep.AutoSize = true;
+            this.Label_IterationStep.Location = new System.Drawing.Point(93, 280);
+            this.Label_IterationStep.Name = "Label_IterationStep";
+            this.Label_IterationStep.Size = new System.Drawing.Size(47, 25);
+            this.Label_IterationStep.TabIndex = 11;
+            this.Label_IterationStep.Text = "Step";
+            // 
+            // Label_IterationStart
+            // 
+            this.Label_IterationStart.AutoSize = true;
+            this.Label_IterationStart.Location = new System.Drawing.Point(93, 243);
+            this.Label_IterationStart.Name = "Label_IterationStart";
+            this.Label_IterationStart.Size = new System.Drawing.Size(48, 25);
+            this.Label_IterationStart.TabIndex = 10;
+            this.Label_IterationStart.Text = "Start";
+            // 
+            // Label_IterationSettings
+            // 
+            this.Label_IterationSettings.AutoSize = true;
+            this.Label_IterationSettings.Location = new System.Drawing.Point(92, 191);
+            this.Label_IterationSettings.Name = "Label_IterationSettings";
+            this.Label_IterationSettings.Size = new System.Drawing.Size(147, 25);
+            this.Label_IterationSettings.TabIndex = 9;
+            this.Label_IterationSettings.Text = "Iteration Settings";
+            // 
+            // TextBox_IterationStart
+            // 
+            this.TextBox_IterationStart.Location = new System.Drawing.Point(146, 240);
+            this.TextBox_IterationStart.Name = "TextBox_IterationStart";
+            this.TextBox_IterationStart.Size = new System.Drawing.Size(93, 31);
+            this.TextBox_IterationStart.TabIndex = 8;
+            this.TextBox_IterationStart.TextChanged += new System.EventHandler(this.TextBox_IterationStart_TextChanged);
+            // 
             // Label_MaxStep
             // 
             this.Label_MaxStep.AutoSize = true;
-            this.Label_MaxStep.Location = new System.Drawing.Point(120, 100);
+            this.Label_MaxStep.Location = new System.Drawing.Point(120, 109);
             this.Label_MaxStep.Name = "Label_MaxStep";
             this.Label_MaxStep.Size = new System.Drawing.Size(85, 25);
             this.Label_MaxStep.TabIndex = 7;
@@ -78,7 +152,7 @@ namespace MotivationButtons
             // 
             // TextBox_MaxStep
             // 
-            this.TextBox_MaxStep.Location = new System.Drawing.Point(83, 128);
+            this.TextBox_MaxStep.Location = new System.Drawing.Point(83, 137);
             this.TextBox_MaxStep.Name = "TextBox_MaxStep";
             this.TextBox_MaxStep.Size = new System.Drawing.Size(169, 31);
             this.TextBox_MaxStep.TabIndex = 6;
@@ -119,7 +193,7 @@ namespace MotivationButtons
             // CheckBox_DebugMode
             // 
             this.CheckBox_DebugMode.AutoSize = true;
-            this.CheckBox_DebugMode.Location = new System.Drawing.Point(71, 196);
+            this.CheckBox_DebugMode.Location = new System.Drawing.Point(71, 425);
             this.CheckBox_DebugMode.Name = "CheckBox_DebugMode";
             this.CheckBox_DebugMode.Size = new System.Drawing.Size(196, 29);
             this.CheckBox_DebugMode.TabIndex = 1;
@@ -129,7 +203,7 @@ namespace MotivationButtons
             // 
             // Button_LoadExcel
             // 
-            this.Button_LoadExcel.Location = new System.Drawing.Point(106, 264);
+            this.Button_LoadExcel.Location = new System.Drawing.Point(110, 369);
             this.Button_LoadExcel.Name = "Button_LoadExcel";
             this.Button_LoadExcel.Size = new System.Drawing.Size(112, 34);
             this.Button_LoadExcel.TabIndex = 0;
@@ -270,6 +344,13 @@ namespace MotivationButtons
         private System.Windows.Forms.Label Label_CandidatePercentiles;
         private System.Windows.Forms.ListBox ListBox_CandidateStatus;
         private System.Windows.Forms.Label Label_CandidateStatus;
+        private System.Windows.Forms.TextBox TextBox_IterationEnd;
+        private System.Windows.Forms.Label Label_IterationEnd;
+        private System.Windows.Forms.TextBox TextBox_IterationStep;
+        private System.Windows.Forms.Label Label_IterationStep;
+        private System.Windows.Forms.Label Label_IterationStart;
+        private System.Windows.Forms.Label Label_IterationSettings;
+        private System.Windows.Forms.TextBox TextBox_IterationStart;
     }
 }
 
