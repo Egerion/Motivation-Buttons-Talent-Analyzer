@@ -15,14 +15,11 @@ namespace MotivationButtons
 
             for (int personIterator = 0; personIterator < totalTrainDataPerson; personIterator++)
             {
-                for (int dataIterator = 0; dataIterator < mbScoreStartIndex; dataIterator++)
+                for (int dataIterator = 2; dataIterator < mbScoreStartIndex; dataIterator++)
                 {
                     if (Int32.TryParse(masterDataArr[personIterator][dataIterator], out number))
                     {
-                        if(number <= 3)
-                        {
-                            tempScoreCounter += number;
-                        }            
+                        tempScoreCounter += number;                                  
                     }
                 }
                 if (tempScoreCounter == totalMBScore)

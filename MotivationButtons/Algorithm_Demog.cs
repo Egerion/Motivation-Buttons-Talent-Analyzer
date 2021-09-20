@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using SharpLearning.RandomForest.Learners;
 using SharpLearning.InputOutput.Csv;
+using System.Text.RegularExpressions;
 
 namespace MotivationButtons
 {
@@ -115,7 +116,11 @@ namespace MotivationButtons
                     if (trainDataPersonArr[sampleIterator][workingStatusColumn] == WorkingStatusArr[(int)WorkingStatus.Working])
                     {
                         tempAvgAge += Int32.Parse(trainDataPersonArr[sampleIterator][ageColumn]);
-                        tempTotalJobCount += Int32.Parse(trainDataPersonArr[sampleIterator][jobCountColumn]);
+                        tempTotalJobCount += Int32.Parse(Regex.Replace(trainDataPersonArr[sampleIterator][jobCountColumn], "[^0-9]+", string.Empty));
+                        if (tempTotalJobCount >= 10)
+                        {
+                            tempTotalJobCount = 0;
+                        }
                         tempWorkerCounter++;
 
                     }
@@ -172,8 +177,12 @@ namespace MotivationButtons
                                 0.0
                                 );
                     trainingList.Add(oData);
-                    trainingList[totalTrainingData].jobCount = Int32.Parse(trainDataPersonArr[personIterator][jobCountColumn]);
-
+                    int tempjobCount = (int)Int32.Parse(Regex.Replace(trainDataPersonArr[personIterator][jobCountColumn], "[^0-9]+", string.Empty));
+                    if(tempjobCount >= 10)
+                    {
+                        tempjobCount = 0;
+                    }
+                    trainingList[totalTrainingData].jobCount = tempjobCount;
                     totalTrainingData++;
                 }
                 else

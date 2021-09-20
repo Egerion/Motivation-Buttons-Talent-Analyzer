@@ -92,6 +92,7 @@ namespace MotivationButtons
             // Label_IterationEnd
             // 
             this.Label_IterationEnd.AutoSize = true;
+            this.Label_IterationEnd.BackColor = System.Drawing.Color.Transparent;
             this.Label_IterationEnd.Location = new System.Drawing.Point(94, 318);
             this.Label_IterationEnd.Name = "Label_IterationEnd";
             this.Label_IterationEnd.Size = new System.Drawing.Size(42, 25);
@@ -109,6 +110,7 @@ namespace MotivationButtons
             // Label_IterationStep
             // 
             this.Label_IterationStep.AutoSize = true;
+            this.Label_IterationStep.BackColor = System.Drawing.Color.Transparent;
             this.Label_IterationStep.Location = new System.Drawing.Point(93, 280);
             this.Label_IterationStep.Name = "Label_IterationStep";
             this.Label_IterationStep.Size = new System.Drawing.Size(47, 25);
@@ -118,6 +120,7 @@ namespace MotivationButtons
             // Label_IterationStart
             // 
             this.Label_IterationStart.AutoSize = true;
+            this.Label_IterationStart.BackColor = System.Drawing.Color.Transparent;
             this.Label_IterationStart.Location = new System.Drawing.Point(93, 243);
             this.Label_IterationStart.Name = "Label_IterationStart";
             this.Label_IterationStart.Size = new System.Drawing.Size(48, 25);
@@ -127,6 +130,7 @@ namespace MotivationButtons
             // Label_IterationSettings
             // 
             this.Label_IterationSettings.AutoSize = true;
+            this.Label_IterationSettings.BackColor = System.Drawing.Color.Transparent;
             this.Label_IterationSettings.Location = new System.Drawing.Point(92, 191);
             this.Label_IterationSettings.Name = "Label_IterationSettings";
             this.Label_IterationSettings.Size = new System.Drawing.Size(147, 25);
@@ -161,6 +165,7 @@ namespace MotivationButtons
             // Label_TresholdPercentage
             // 
             this.Label_TresholdPercentage.AutoSize = true;
+            this.Label_TresholdPercentage.BackColor = System.Drawing.Color.Transparent;
             this.Label_TresholdPercentage.Location = new System.Drawing.Point(83, 38);
             this.Label_TresholdPercentage.Name = "Label_TresholdPercentage";
             this.Label_TresholdPercentage.Size = new System.Drawing.Size(169, 25);
@@ -184,6 +189,7 @@ namespace MotivationButtons
             // Label_Settings
             // 
             this.Label_Settings.AutoSize = true;
+            this.Label_Settings.BackColor = System.Drawing.Color.Transparent;
             this.Label_Settings.Location = new System.Drawing.Point(129, 0);
             this.Label_Settings.Name = "Label_Settings";
             this.Label_Settings.Size = new System.Drawing.Size(76, 25);
@@ -193,12 +199,13 @@ namespace MotivationButtons
             // CheckBox_DebugMode
             // 
             this.CheckBox_DebugMode.AutoSize = true;
+            this.CheckBox_DebugMode.BackColor = System.Drawing.Color.Transparent;
             this.CheckBox_DebugMode.Location = new System.Drawing.Point(71, 425);
             this.CheckBox_DebugMode.Name = "CheckBox_DebugMode";
             this.CheckBox_DebugMode.Size = new System.Drawing.Size(196, 29);
             this.CheckBox_DebugMode.TabIndex = 1;
             this.CheckBox_DebugMode.Text = "Enable DebugMode";
-            this.CheckBox_DebugMode.UseVisualStyleBackColor = true;
+            this.CheckBox_DebugMode.UseVisualStyleBackColor = false;
             this.CheckBox_DebugMode.CheckedChanged += new System.EventHandler(this.CheckBox_DebugMode_CheckedChanged);
             // 
             // Button_LoadExcel
@@ -313,6 +320,8 @@ namespace MotivationButtons
             this.Controls.Add(this.Label_Status);
             this.Controls.Add(this.SidePanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(967, 750);
+            this.MinimumSize = new System.Drawing.Size(967, 750);
             this.Name = "MainBody";
             this.Opacity = 0.95D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
